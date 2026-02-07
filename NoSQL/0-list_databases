@@ -1,1 +1,25 @@
-show dbs
+const { MongoClient } = require('mongodb');
+
+const url = 'mongodb://127.0.0.1:27017';
+
+async function listDatabases() {
+  const client = new MongoClient(url);
+  
+  try {
+    await client.connect();
+    
+    const adminDb = client.db().admin();
+    const databasesList = await adminDb.listDatabases();
+    
+    databasesList.databases.forEach(db => {
+      console.log(db.name);
+    });
+    
+  } catch (error) {
+    console.error('Error:', error);
+  } finally {
+    await client.close();
+  }
+}
+
+listDatabases();
